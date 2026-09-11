@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAEPSaúde</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar">
+      <div class="company-profile">
+        <div class="brand">
+          <img id="company-logo" src="assets/SAEPSaude.png" alt="Logo SAEPSaúde">
+          <h1 id="company-name">SAEPSaúde</h1>
+        </div>
+
+        <div class="company-stats">
+          <div>
+            <strong id="company-activities">0</strong>
+            <span>Atividades</span>
+          </div>
+          <div>
+            <strong id="company-calories">0</strong>
+            <span>Calorias</span>
+          </div>
+        </div>
+
+        <button id="activity-nav" class="activity-nav" type="button" disabled>
+          <span class="activity-nav-icon">▥</span>
+          <span>Atividade</span>
+        </button>
+      </div>
+
+      <footer class="sidebar-footer">
+        <strong>SAEPSaúde</strong>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><img src="assets/Instagram.svg" alt="Instagram"></a>
+          <a href="#" aria-label="Facebook"><img src="assets/Facebook.svg" alt="Facebook"></a>
+          <a href="#" aria-label="YouTube"><img src="assets/YouTube.svg" alt="YouTube"></a>
+          <a href="#" aria-label="TikTok"><img src="assets/TikTok.svg" alt="TikTok"></a>
+          <a href="#" aria-label="X"><img src="assets/Twitter.svg" alt="X"></a>
+        </div>
+        <small>Copyright-2024</small>
+      </footer>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <span class="eyebrow">Plataforma de atividades físicas</span>
+          <h2 id="page-title">Atividades recentes</h2>
+        </div>
+        <div class="header-actions">
+          <button id="login-button" class="login-button" type="button">Login</button>
+          <button id="logout-button" class="logout-button hidden" type="button">Logout</button>
+        </div>
+      </header>
+
+      <section class="filters-section">
+        <button class="filter-button" data-filter="corrida" type="button">Corrida</button>
+        <button class="filter-button" data-filter="caminhada" type="button">Caminhada</button>
+        <button class="filter-button" data-filter="trilha" type="button">Trilha</button>
+        <button id="clear-filter" class="filter-button filter-clear" type="button">Todas</button>
+      </section>
+
+      <section id="login-gate" class="login-gate hidden">
+        Faça login para utilizar filtros, paginação, curtidas, comentários e cadastrar atividades.
+      </section>
+
+      <section id="activity-create-section" class="create-section hidden">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Nova atividade</span>
+            <h3>Crie sua atividade</h3>
+          </div>
+          <button id="back-to-feed" class="secondary-button" type="button">Voltar</button>
+        </div>
+
+        <form id="activity-form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="activity-type">Tipo da atividade</label>
+              <select id="activity-type" name="tipo" required>
+                <option value="">Selecione</option>
+                <option value="corrida">Corrida</option>
+                <option value="caminhada">Caminhada</option>
+                <option value="trilha">Trilha</option>
+              </select>
+              <span class="field-error" data-error-for="activity-type"></span>
+            </div>
+
+            <div class="field">
+              <label for="activity-distance">Distância percorrida</label>
+              <input id="activity-distance" name="distancia_metros" type="number" min="1" step="1" placeholder="Ex: 1000 metros" required>
+              <span class="field-error" data-error-for="activity-distance"></span>
+            </div>
+
+            <div class="field">
+              <label for="activity-duration">Duração da atividade</label>
+              <input id="activity-duration" name="duracao_minutos" type="number" min="1" step="1" placeholder="Ex: 120 min" required>
+              <span class="field-error" data-error-for="activity-duration"></span>
+            </div>
+
+            <div class="field">
+              <label for="activity-calories">Quantidade de Calorias</label>
+              <input id="activity-calories" name="calorias" type="number" min="1" step="1" placeholder="Ex: 300" required>
+              <span class="field-error" data-error-for="activity-calories"></span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Criar Atividade</button>
+          </div>
+          <p id="activity-form-message" class="form-message"></p>
+        </form>
+      </section>
+
+      <section id="feed-section" class="feed-section">
+        <div class="feed-heading">
+          <div>
+            <span class="eyebrow">Comunidade</span>
+            <h3 id="feed-title">Suas atividades</h3>
+          </div>
+          <label class="page-size">
+            Itens por página
+            <select id="page-size-select">
+              <option value="4" selected>4</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="activities-list" class="activities-list"></div>
+        <div id="empty-state" class="empty-state hidden">Nenhuma atividade encontrada.</div>
+
+        <nav id="pagination" class="pagination" aria-label="Paginação">
+          <button type="button" data-page-action="first">Primeira</button>
+          <button type="button" data-page-action="previous">Anterior</button>
+          <div id="page-numbers" class="page-numbers"></div>
+          <button type="button" data-page-action="next">Próxima</button>
+          <button type="button" data-page-action="last">Última</button>
+        </nav>
+      </section>
+
+      <section id="profile-section" class="user-profile hidden">
+        <div class="profile-card">
+          <img id="user-photo" src="assets/avatar.svg" alt="Foto do usuário">
+          <div>
+            <span class="eyebrow">Usuário conectado</span>
+            <h3 id="user-name">Usuário</h3>
+            <p id="user-email"></p>
+          </div>
+        </div>
+        <div class="user-stats">
+          <div><strong id="user-activities">0</strong><span>Atividades</span></div>
+          <div><strong id="user-calories">0</strong><span>Calorias</span></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="login-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <div class="modal-backdrop" data-close-login></div>
+    <div class="modal-card">
+      <button id="close-login" class="modal-close" type="button" aria-label="Fechar">×</button>
+      <span class="eyebrow">Acesso</span>
+      <h3 id="login-title">Login</h3>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="login-email">E-mail</label>
+          <input id="login-email" type="email" autocomplete="email" placeholder="Digite seu e-mail">
+          <span class="field-error" data-error-for="login-email"></span>
+        </div>
+
+        <div class="field">
+          <label for="login-password">Senha</label>
+          <input id="login-password" type="password" autocomplete="current-password" placeholder="Digite sua senha">
+          <span class="field-error" data-error-for="login-password"></span>
+        </div>
+
+        <p id="login-message" class="form-message"></p>
+
+        <div class="modal-actions">
+          <button id="cancel-login" class="secondary-button" type="button">Cancelar</button>
+          <button class="primary-button" type="submit">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <template id="activity-template">
+    <article class="activity-card">
+      <div class="activity-title-row">
+        <h4 class="activity-title"></h4>
+        <time class="activity-date"></time>
+      </div>
+
+      <div class="activity-user">
+        <img class="activity-user-photo" src="assets/avatar.svg" alt="">
+        <strong class="activity-user-name"></strong>
+      </div>
+
+      <div class="activity-metrics">
+        <div><strong class="metric-distance"></strong><span>Distância</span></div>
+        <div><strong class="metric-duration"></strong><span>Duração</span></div>
+        <div><strong class="metric-calories"></strong><span>Calorias</span></div>
+      </div>
+
+      <div class="activity-actions">
+        <button class="like-button" type="button">
+          <img src="assets/coração.svg" alt="">
+          <span class="like-count">0</span>
+        </button>
+        <button class="comment-button" type="button">
+          <img src="assets/chat.svg" alt="">
+          <span class="comment-count">0</span>
+        </button>
+      </div>
+
+      <div class="comment-area hidden">
+        <div class="comments-list"></div>
+        <form class="comment-form">
+          <input type="text" name="comentario" maxlength="500" placeholder="Escrever um comentário…" aria-label="Escrever um comentário">
+          <button type="submit" aria-label="Enviar comentário">
+            <img src="assets/send.svg" alt="">
+          </button>
+        </form>
+        <p class="comment-message"></p>
+      </div>
+    </article>
+  </template>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
